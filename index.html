@@ -4,11 +4,97 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <title>Weather Report</title>
 </head>
 
+<header class="bg-info text-light">
+    <h1>Weather Dashboard</h1>
+</header>
+
 <body>
-    
+    <!-- Display body as sections, with the sibebar taking up 3 blocks and display tkaing up 9 blocks -->
+    <section class="container my-5">
+        <div class="row">
+            <div id="side_area" class="col-3">
+                <h2>Search for a City:</h2>
+                <form>
+                    <div class="form-group">
+                      <input class="form-control" id="city_name_search" placeholder="Type Here">
+                    </div>
+                    <button type="submit" id="search_button" class="btn btn-info">Search</button>
+                </form>
+                <div id="city_list" class="list_group mt-3">
+                    <button type="button" class="btn btn-secondary btn-lg btn-block list-group-item list-group-item-action">
+                        Example button
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-lg btn-block list-group-item list-group-item-action">
+                        Example button
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-lg btn-block list-group-item list-group-item-action">
+                        Example button
+                    </button>
+                </div>
+            </div>
+
+            <div id="display_area" class="col-9">
+                <div id="banner" class="col-12">
+                    <h2><span id="banner_header">Deafualt</span></h2>
+                    <h4>Temp: <span id="banner_temp">-0</span>°F</h4>
+                    <h4>Wind: <span id="banner_wind_speed">-0</span>mph</h4>
+                    <h4>Humidity: <span id="banner_humidity">-0</span>%</h4>
+                </div>
+                <div id="forecast">
+                    <h2 class="col-12">5-Day Forecast:</h2>
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item list-group-item-info">
+                            <h4 id="date_1">date_1</h4>
+                            <h6 id="image_1">image_1</h6>
+                            <h6>Temp: <span id="temp_1">-0</span>°F</h6>
+                            <h6>Wind: <span id="wind_speed_1">-0</span>mph</h6>
+                            <h6>Humidity: <span id="humidity_1">-0</span>%</h6>
+                        </li>
+                        <li class="list-group-item list-group-item-info">
+                            <h4 id="date_2">date_2</h4>
+                            <h6 id="image_2">image_2</h6>
+                            <h6>Temp: <span id="temp_2">-0</span>°F</h6>
+                            <h6>Wind: <span id="wind_speed_2">-0</span>mph</h6>
+                            <h6>Humidity: <span id="humidity_2">-0</span>%</h6>
+                        </li>
+                        <li class="list-group-item list-group-item-info">
+                            <h4 id="date_3">date_3</h4>
+                            <h6 id="image_3">image_3</h6>
+                            <h6>Temp: <span id="temp_3">-0</span>°F</h6>
+                            <h6>Wind: <span id="wind_speed_3">-0</span>mph</h6>
+                            <h6>Humidity: <span id="humidity_3">-0</span>%</h6>
+                        </li>
+                        <li class="list-group-item list-group-item-info">
+                            <h4 id="date_4">date_4</h4>
+                            <h6 id="image_4">image_4</h6>
+                            <h6>Temp: <span id="temp_4">-0</span>°F</h6>
+                            <h6>Wind: <span id="wind_speed_4">-0</span>mph</h6>
+                            <h6>Humidity: <span id="humidity_4">-0</span>%</h6>
+                        </li>
+                        <li class="list-group-item list-group-item-info">
+                            <h4 id="date_5">date_5</h4>
+                            <h6 id="image_5">image_5</h6>
+                            <h6>Temp: <span id="temp_5">-0</span>°F</h6>
+                            <h6>Wind: <span id="wind_speed_5">-0</span>mph</h6>
+                            <h6>Humidity: <span id="humidity_5">-0</span>%</h6>
+                        </li>
+                      </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="./assets/js/script.js"></script>
 
 </html>
