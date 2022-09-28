@@ -22,7 +22,7 @@ var search_button = $("#search_button");
 var city_name_search = $("#city_name_search");
 var city_list = $("#city_list");
 
-var city_name = "";
+let city_name = "";
 var stored_cities = [];
 var holding_cities = [];
 
@@ -42,7 +42,7 @@ function save() {
     localStorage.setItem("stored_cities", JSON.stringify(stored_cities));
 }
 
-// Helper function 
+// Helper function that retrieves an API and deep copies it to holding_cities
 function get_API(name) {
     var request_url = `https://api.openweathermap.org/data/2.5/forecast?q=${name}&units=imperial&appid=345c2b977bf428b0cb7c91b0d2ca9226`;
 
@@ -70,10 +70,16 @@ function build_page_layout(name, weather_list) {
 
     // console.log(weather_list[0]);
     $("#banner_header").text(`${name} (${moment.unix(weather_list[0].dt).format("L")})`);
+    $("#banner_temp").text(weather_list[0].main.temp);
+    $("#banner_wind_speed").text(weather_list[0].wind.speed);
+    $("#banner_humidity").text(weather_list[0].main.humidity);
     var counter = 1;
     for(var i = 7; i < 40; i+=7) {
         $(`#date_${counter}`).text(moment.unix(weather_list[i].dt).format("L"));
         $(`#image_${counter}`).text(name);
+        $(`#temp_${counter}`).text(weather_list[i].main.temp);
+        $(`#wind_speed_${counter}`).text(weather_list[i].wind.speed);
+        $(`#humidity_${counter}`).text(weather_list[i].main.humidity);
         counter++;
     }
 }
@@ -82,10 +88,11 @@ function build_page_layout(name, weather_list) {
 search_button.on("click", function(event) {
     event.preventDefault();
     city_name = city_name_search.val();
+    let city_name_replaced = city_name_search.val().replace(" ", "_")
 
         var button_tag = $(`<button type="button" 
         class="btn btn-secondary btn-lg btn-block list-group-item list-group-item-action"
-        id="${city_name}_button">
+        id="${city_name_replaced}_button">
         ${city_name}
         </button>`)
         city_list.append(button_tag);
@@ -101,13 +108,20 @@ search_button.on("click", function(event) {
 
         // holding_cities = get_API(city_name);
         // holding_cities = JSON.parse(localStorage.getItem("holding_cities"));
-        console.log(holding_cities);
-        // build_page_layout(city_name, holding_cities);
+        // console.log(holding_cities);
+        get_API(city_name);
+        build_page_layout(city_name, holding_cities);
+        // console.log(`value of button is ${document.querySelector(`#${city_name_replaced}_button`).textContent}`);
 
         // Event listener for city buttons
-        $("#" + city_name + "_button").on("click", function(event) {
+        $("#" + city_name_replaced + "_button").on("click", function(event) {
             event.preventDefault();
-            console.log("clicked " + city_name + " side button");
+            // console.log(document.querySelector(`#${city_name_replaced}_button`).textContent);
+            // console.log($(`#${city_name_replaced}_button`).text().trim());
+            // console.log("clicked " + $("#" + city_name_replaced + "_button").val() + " side button");
+            var holder = $(`#${city_name_replaced}_button`).text().trim()
+            get_API(holder);
+            build_page_layout(holder, holding_cities);
         });
 });
 
