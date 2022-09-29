@@ -29,5 +29,5 @@ N/A
 Please refer to the license in the repo
 
 ## Links and Images
-Github pages URL: https://fortu038.github.io/05_calendar/
-![A screenshot of the very top portion of the calendar site](./assets/images/calendar_site.jpg)
+Github pages URL: https://fortu038.github.io/06_weather_dashbaord/
+![A screenshot of the weather dashboard site](./assets/images/06_site_image.jpg)
