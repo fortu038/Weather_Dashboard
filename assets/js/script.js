@@ -1,23 +1,3 @@
-// const weatherDays = []  
-// let currDay = null
-
-// sampleData.list.forEach( function(tsObj){
-
-//   // Makes a moment date object for each record
-//   const dateObj = moment.unix(tsObj.dt)
-
-//   // Generate the day # for the day in the date object
-//   const dateNum = dateObj.format("DDD")
-
-//   // If the current date in tsObj hasn't had a record put into weatherDays, do that now 
-//   // Then skip over all other records for this day
-//   if( dateNum !== currDay && weatherDays.length < 5 ){
-//     weatherDays.push( tsObj )
-//     currDay = dateNum
-//   }
-
-// })
-
 var search_button = $("#search_button");
 var city_name_search = $("#city_name_search");
 var city_list = $("#city_list");
@@ -31,20 +11,18 @@ function init() {
     var holder = JSON.parse(localStorage.getItem("stored_cities"));
 
     if(holder === null) {
-        var startup_city = "Minneapolis";
-        stored_cities = [startup_city];
+        // var startup_city = "Minneapolis";
+        // stored_cities = [startup_city];
         // get_API(startup_city);
         // build_page_layout(startup_city);
+        stored_cities = [];
     } else {
         stored_cities = holder;
-        // for(var i = 1; i < stored_cities.length; i++){
-        //     get_API(stored_cities[i]);
-        //     build_page_layout(stored_cities[i]);
-        // }
     }
 }
 
 // Helper function that saves stored_cities into local storage
+// Note: Use this in the future if I want to save stored cities between refreshes
 function save() {
     localStorage.setItem("stored_cities", JSON.stringify(stored_cities));
 }
@@ -52,43 +30,32 @@ function save() {
 // Helper function that retrieves an API and deep copies it to holding_cities
 function get_API(name) {
     var request_url = `https://api.openweathermap.org/data/2.5/forecast?q=${name}&units=imperial&appid=345c2b977bf428b0cb7c91b0d2ca9226`;
-    console.log("in get_API");
 
     fetch(request_url)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-            // console.log(data.list);
-            // localStorage.setItem("holding_cities", JSON.stringify(data.list));
-            console.log(`data is ${data}`);
             holding_cities = JSON.parse(JSON.stringify(data.list)); // I hate the need for deep copies so much, why are pointers so dumb
             localStorage.setItem("holding_cities", JSON.stringify(holding_cities));
-            console.log(`holding_cities in get_API is ${holding_cities}`);
+            build_page_layout(name, holding_cities);
             return;
         })
 }
 
-// Need a builder function for page layout
+// Helper function that adds buttons to the sidebar and builds the main display forecast
 function build_page_layout(name, weather_list) {
-    // var time = moment();
-    // $("#banner_header").text(`${name} (${time.format("L")})`);
-    // $("#date_1").text(time.add(1, "days").format("L"));
-    // $("#date_2").text(time.add(1, "days").format("L"));
-    // $("#date_3").text(time.add(1, "days").format("L"));
-    // $("#date_4").text(time.add(1, "days").format("L"));
-    // $("#date_5").text(time.add(1, "days").format("L"));
-    console.log("in build_page_layout");
-
-    console.log(`weather_list is ${weather_list}`);
     $("#banner_header").text(`${name} (${moment.unix(weather_list[0].dt).format("L")})`);
+    $("#banner_image").attr("src", `http://openweathermap.org/img/wn/${weather_list[0].weather[0].icon}@2x.png`);
+    $("#banner_image").attr("alt", weather_list[0].weather[0].description)
     $("#banner_temp").text(weather_list[0].main.temp);
     $("#banner_wind_speed").text(weather_list[0].wind.speed);
     $("#banner_humidity").text(weather_list[0].main.humidity);
     var counter = 1;
     for(var i = 7; i < 40; i+=7) {
         $(`#date_${counter}`).text(moment.unix(weather_list[i].dt).format("L"));
-        $(`#image_${counter}`).text(name);
+        $(`#image_${counter}`).attr("src", `http://openweathermap.org/img/wn/${weather_list[i].weather[0].icon}@2x.png`);
+        $(`#image_${counter}`).attr("alt", weather_list[i].weather[0].description);
         $(`#temp_${counter}`).text(weather_list[i].main.temp);
         $(`#wind_speed_${counter}`).text(weather_list[i].wind.speed);
         $(`#humidity_${counter}`).text(weather_list[i].main.humidity);
@@ -99,6 +66,14 @@ function build_page_layout(name, weather_list) {
 // Event listener for search button
 search_button.on("click", function(event) {
     event.preventDefault();
+
+    if(stored_cities.length < 1) {
+        $("#side_area").removeClass("col-12");
+        $("#side_area").addClass("col-3");
+
+        $("#display_area").removeClass("d-none");
+    }
+
     city_name = city_name_search.val();
     let city_name_replaced = city_name_search.val().replace(" ", "_")
 
@@ -110,31 +85,15 @@ search_button.on("click", function(event) {
         </button>`)
         city_list.append(button_tag);
         stored_cities.push(city_name);
-        save();
-
-        // get_API(city_name);
-        
-        // var banner_header = document.querySelector("#banner_header");
-        // banner_header.textContent = `${city_name} (${time.format("L")})`; 
-
-        // holding_cities = get_API(city_name);
-        // holding_cities = JSON.parse(localStorage.getItem("holding_cities"));
-        // console.log(holding_cities);
+        // save();
 
         get_API(city_name);
-        console.log(`${holding_cities}`);
-        build_page_layout(city_name, holding_cities);
-        // console.log(`value of button is ${document.querySelector(`#${city_name_replaced}_button`).textContent}`);
 
         // Event listener for city buttons
         $("#" + city_name_replaced + "_button").on("click", function(event) {
             event.preventDefault();
-            // console.log(document.querySelector(`#${city_name_replaced}_button`).textContent);
-            // console.log($(`#${city_name_replaced}_button`).text().trim());
-            // console.log("clicked " + $("#" + city_name_replaced + "_button").val() + " side button");
             var holder = $(`#${city_name_replaced}_button`).text().trim();
             get_API(holder);
-            build_page_layout(holder, holding_cities);
         });
     } else {
         console.log("already here");
