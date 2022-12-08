@@ -6,7 +6,7 @@ let city_name = "";
 var stored_cities = ["Minneapolis"];
 var holding_cities = [];
 
-// Helepr function that initializes stored_cities from local storage if it is available, setting it to an empty array if it is not
+// Helper function that initializes stored_cities from local storage if it is available, setting it to an empty array if it is not
 function init() {
     var holder = JSON.parse(localStorage.getItem("stored_cities"));
 
