@@ -2,7 +2,7 @@
 
 ## Description
 
-The goal of this project was to build a weather dsahboard website in order to display skills learned with
+The goal of this project was to build a weather dashboard website in order to display skills learned with
 Bootstrap, jQuery, and APIs.
 The created site displays today's weather along with that of a five day forecast for entered locations.
 This project allowed me to practice using Bootstrap to layout pages, jQuery to make modifying the DOM easier,
