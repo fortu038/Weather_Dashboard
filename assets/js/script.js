@@ -6,6 +6,8 @@ let city_name = "";
 var stored_cities = ["Minneapolis"];
 var holding_cities = [];
 
+let cod_holder = -1;
+
 // Helper function that initializes stored_cities from local storage if it is available, setting it to an empty array if it is not
 function init() {
     var holder = JSON.parse(localStorage.getItem("stored_cities"));
@@ -28,18 +30,31 @@ function save() {
 }
 
 // Helper function that retrieves an API and deep copies it to holding_cities
-function get_API(name) {
+async function get_API(name) {
     var request_url = `https://api.openweathermap.org/data/2.5/forecast?q=${name}&units=imperial&appid=345c2b977bf428b0cb7c91b0d2ca9226`;
 
-    fetch(request_url)
+    await fetch(request_url)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
+            console.log(`data is:`);
+            console.log(data);
+            cod_holder = data.cod;
+
+            if(cod_holder != 200) {
+                console.log("http code is not 200!");
+                return cod_holder;
+            }
+
             holding_cities = JSON.parse(JSON.stringify(data.list)); // I hate the need for deep copies so much, why are pointers so dumb
             localStorage.setItem("holding_cities", JSON.stringify(holding_cities));
             build_page_layout(name, holding_cities);
-            return;
+            return cod_holder;
+        })
+        .catch(function (error) {
+            console.log(`catch error is: ${error}`);
+            return error;
         })
 }
 
@@ -64,20 +79,39 @@ function build_page_layout(name, weather_list) {
 }
 
 // Event listener for search button
-search_button.on("click", function(event) {
+search_button.on("click", async function(event) {
     event.preventDefault();
 
-    if(stored_cities.length < 1) {
-        $("#side_area").removeClass("col-12");
-        $("#side_area").addClass("col-3");
+    city_name = city_name_search.val();
 
-        $("#display_area").removeClass("d-none");
+    if(!city_name.replace(/\s/g, "").length) {
+        console.log("empty search");
+        return;
     }
 
-    city_name = city_name_search.val();
     let city_name_replaced = city_name_search.val().replace(" ", "_")
 
     if(!stored_cities.includes(city_name)) {
+        await get_API(city_name);
+
+        console.log(cod_holder);
+
+        if(cod_holder == 404) {
+            alert("HTTP Code 404: Invalid city name!");
+            return;
+        }
+        else if(cod_holder != 200) {
+            alert(`An error has occured: HTTP Code ${cod_holder}`)
+            return;
+        }
+
+        if(stored_cities.length == 0) {
+            $("#side_area").removeClass("col-12");
+            $("#side_area").addClass("col-3");
+    
+            $("#display_area").removeClass("d-none");
+        }
+
         var button_tag = $(`<button type="button" 
         class="btn btn-secondary btn-lg btn-block list-group-item list-group-item-action"
         id="${city_name_replaced}_button">
@@ -86,8 +120,6 @@ search_button.on("click", function(event) {
         city_list.append(button_tag);
         stored_cities.push(city_name);
         // save();
-
-        get_API(city_name);
 
         // Event listener for city buttons
         $("#" + city_name_replaced + "_button").on("click", function(event) {
