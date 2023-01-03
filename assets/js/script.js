@@ -97,7 +97,8 @@ search_button.on("click", async function(event) {
         console.log(cod_holder);
 
         if(cod_holder == 404) {
-            alert("HTTP Code 404: Invalid city name!");
+            // alert("HTTP Code 404: Invalid city name!");
+            console.log("Error Code 404");
             return;
         }
         else if(cod_holder != 200) {
