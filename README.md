@@ -29,5 +29,5 @@ N/A
 Please refer to the license in the repo
 
 ## Links and Images
-Github pages URL: https://fortu038.github.io/06_weather_dashbaord/
+Github pages URL: https://fortu038.github.io/Weather_Dashboard/
 ![A screenshot of the weather dashboard site](./assets/images/06_site_image.jpg)
